@@ -1,1 +1,1 @@
-print('hello' * 100000)
+print('hello' * 1000)
