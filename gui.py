@@ -3,52 +3,67 @@ import wx.grid as gridlib
 import numpy as np
 import random as rn
 
+"""wxpython is a module that makes GUIs (Graphical User Interface) for python. You probably know numpy and random"""
+
+#Array for your bet inputs
 bets = np.zeros(5)
+
+
 ########################################################################
+#Page 1 of the GUI
 class PanelOne(wx.Panel):
     """"""
 
     #----------------------------------------------------------------------
     def __init__(self, parent):
         """Constructor"""
+        #Make Page
         wx.Panel.__init__(self, parent)
+
+        #Sizer controls positioning of elements on the page
         my_sizer = wx.BoxSizer(wx.VERTICAL)
+
+        #Add text box and add to sizer to control it's position
         self.text_ctrl = wx.TextCtrl(self)
         my_sizer.Add(self.text_ctrl, 0, wx.ALL | wx.EXPAND, 5)
 
+        #Radio box 1
         self.rb1 = wx.RadioBox(self, style = wx.RA_SPECIFY_COLS, label = "Game 1", pos = (5, 50), choices = ["3", "3", "3"])
         self.rb1.Bind(wx.EVT_RADIOBOX, self.onRadioBox1)
         my_sizer.Add(self.rb1, 0, wx.ALL | wx.CENTER, 5)
 
+        #Radio box 2
         self.rb2 = wx.RadioBox(self, style = wx.RA_SPECIFY_COLS, label = "Game 2", pos = (5, 50), choices = ["2", "4", "4"])
         self.rb2.Bind(wx.EVT_RADIOBOX, self.onRadioBox2)
         my_sizer.Add(self.rb2, 0, wx.ALL | wx.CENTER, 5)
 
+        #Radio box 3
         self.rb3 = wx.RadioBox(self, style = wx.RA_SPECIFY_COLS, label = "Game 3", pos = (5, 50), choices = ["10", "1", "1.11"])
         self.rb3.Bind(wx.EVT_RADIOBOX, self.onRadioBox3)
         my_sizer.Add(self.rb3, 0, wx.ALL | wx.CENTER, 5)
 
+        #Radio box 4
         self.rb4 = wx.RadioBox(self, style = wx.RA_SPECIFY_COLS, label = "Game 4", pos = (5, 50), choices = ["5", "2.5", "2.5"])
         self.rb4.Bind(wx.EVT_RADIOBOX, self.onRadioBox4)
         my_sizer.Add(self.rb4, 0, wx.ALL | wx.CENTER, 5)
 
+        #Radio box 5
         self.rb5 = wx.RadioBox(self, style = wx.RA_SPECIFY_COLS, label = "Game 5", pos = (5, 50), choices = ["2.5", "3.33", "3.33"])
         self.rb5.Bind(wx.EVT_RADIOBOX, self.onRadioBox5)
         my_sizer.Add(self.rb5, 0, wx.ALL | wx.CENTER, 5)
         self.SetSizer(my_sizer)
 
+        #Normal button
         my_btn = wx.Button(self, label = 'Confirm Choices')
         my_btn.Bind(wx.EVT_BUTTON, parent.gtpage2)
         my_sizer.Add(my_btn, 0, wx.ALL | wx.CENTER, 5)
 
 
-    def on_press(self, event):
-        value = self.text_ctrl.GetValue()
-        if not value:
-            print("You didn't enter anything")
-        else:
-            print(f'You typed: "{value}"')
+        #The Bind method dictates what happens when you press the button. For each of the radio boxes it triggers
+        #.onRadioBox1 etc. and on the button it triggers .gtpage2
+        #.onRadioBox is defined below and .gtpage2 is defined later
 
+    #Setting selections for bets
     def onRadioBox1(self,e):
         bets[0] = self.rb1.GetStringSelection()
 
@@ -70,15 +85,19 @@ class PanelTwo(wx.Panel):
     """"""
 
     #----------------------------------------------------------------------
+    #Same form as before for page 2
     def __init__(self, parent):
         """Constructor"""
         wx.Panel.__init__(self, parent=parent)
+        #Create Grid
         grid = gridlib.Grid(self)
         grid.CreateGrid(6, 4)
 
         my_sizer = wx.BoxSizer(wx.VERTICAL)
         my_sizer.Add(grid, 0 , wx.EXPAND)
         self.SetSizer(my_sizer)
+
+        #Set column and row titles
         grid.SetColLabelValue(0, 'Name')
         grid.SetColLabelValue(1, 'AI 1')
         grid.SetColLabelValue(2, 'AI 2')
@@ -87,24 +106,28 @@ class PanelTwo(wx.Panel):
 
         print(bets)
 
+        #Set values
         grid.SetCellValue(0, 0, str(bets[0]))
         grid.SetCellValue(1, 0, str(bets[1]))
         grid.SetCellValue(2, 0, str(bets[2]))
         grid.SetCellValue(3, 0, str(bets[3]))
         grid.SetCellValue(4, 0, str(bets[4]))
 
+        #Options for AIs
         choices_1 = [3, 3, 3]
         choices_2 = [2, 4, 4]
         choices_3 = [10, 1, 1.11]
         choices_4 = [5, 2.5, 2.5]
         choices_5 = [2.5, 3.33, 3.33]
 
+        #AIs make random choices
         AI_1 = [rn.choice(choices_1), rn.choice(choices_2), rn.choice(choices_3), rn.choice(choices_4), rn.choice(choices_5)]
         AI_2 = [rn.choice(choices_1), rn.choice(choices_2), rn.choice(choices_3), rn.choice(choices_4), rn.choice(choices_5)]
         AI_3 = [rn.choice(choices_1), rn.choice(choices_2), rn.choice(choices_3), rn.choice(choices_4), rn.choice(choices_5)]
         AI_4 = [rn.choice(choices_1), rn.choice(choices_2), rn.choice(choices_3), rn.choice(choices_4), rn.choice(choices_5)]
         AI_5 = [rn.choice(choices_1), rn.choice(choices_2), rn.choice(choices_3), rn.choice(choices_4), rn.choice(choices_5)]
 
+        #Set values
         grid.SetCellValue(0, 1, str(AI_1[0]))
         grid.SetCellValue(1, 1, str(AI_1[1]))
         grid.SetCellValue(2, 1, str(AI_1[2]))
@@ -126,9 +149,7 @@ class PanelTwo(wx.Panel):
         grid.SetCellValue(4, 3, str(AI_3[4]))
         grid.SetCellValue(5, 3, str(AI_3[0] * AI_3[1] * AI_3[2] * AI_3[3] * AI_3[4]))
 
-
-        #txt = wx.TextCtrl(self)
-        #my_sizer.Add(txt, 0, wx.ALL | wx.EXPAND, 5)
+        #Button for next page
         button =wx.Button(self, label="Go to results", pos=(200, 325))
         button.Bind(wx.EVT_BUTTON, parent.gtpage3)
         my_sizer.Add(button, 0, wx.ALL | wx.CENTER, 5)
@@ -139,6 +160,7 @@ class PanelThree(wx.Panel):
     """"""
 
     #----------------------------------------------------------------------
+    #Page for results
     def __init__(self, parent):
         """Constructor"""
         wx.Panel.__init__(self, parent=parent)
@@ -151,6 +173,7 @@ class PanelThree(wx.Panel):
 class MyForm(wx.Frame):
 
     #----------------------------------------------------------------------
+    #Whole file
     def __init__(self):
         wx.Frame.__init__(self, None, wx.ID_ANY,
                           "5 fold acca",
@@ -170,7 +193,7 @@ class MyForm(wx.Frame):
 
 
     #----------------------------------------------------------------------
-
+    #Methods that were called earlier
     def gtpage2(self, event):
         self.panel_one.Hide()
         self.panel_two.Show()
